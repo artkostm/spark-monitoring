@@ -47,6 +47,7 @@ object LogAnalyticsListenerSuite {
     taskType = "",
     reason = Success,
     createTaskInfo(0, 0),
+    null,
     null)
 
   val sparkListenerStageSubmitted = SparkListenerStageSubmitted(createStageInfo(0, 0))
@@ -110,6 +111,9 @@ object LogAnalyticsListenerSuite {
       "Classpath Entries" -> Seq(
         "/jar1" -> "System",
         "/jar2" -> "User"
+      ),
+      "Hadoop Properties" -> Seq(
+        "prop1" -> "v1"
       )
     )
   )

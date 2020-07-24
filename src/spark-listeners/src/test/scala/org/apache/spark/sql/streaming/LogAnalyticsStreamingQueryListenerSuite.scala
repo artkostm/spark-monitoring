@@ -6,10 +6,10 @@ import org.apache.spark.listeners.ListenerSuite
 import org.apache.spark.sql.streaming.StreamingQueryListener.{QueryProgressEvent, QueryStartedEvent, QueryTerminatedEvent}
 import org.scalatest.BeforeAndAfterEach
 
-import scala.collection.JavaConversions.mapAsJavaMap
+import scala.collection.JavaConverters.mapAsJavaMap
 
 object LogAnalyticsStreamingQueryListenerSuite {
-  val queryStartedEvent = new QueryStartedEvent(UUID.randomUUID, UUID.randomUUID, "name")
+  val queryStartedEvent = new QueryStartedEvent(UUID.randomUUID, UUID.randomUUID, "name", "timestamp")
   val queryTerminatedEvent = new QueryTerminatedEvent(UUID.randomUUID, UUID.randomUUID, None)
   val queryProgressEvent = new QueryProgressEvent(
     new StreamingQueryProgress(
@@ -17,6 +17,7 @@ object LogAnalyticsStreamingQueryListenerSuite {
       UUID.randomUUID,
       null,
       ListenerSuite.EPOCH_TIME_AS_ISO8601,
+      2L,
       2L,
       mapAsJavaMap(Map("total" -> 0L)),
       mapAsJavaMap(Map.empty[String, String]),
@@ -32,7 +33,8 @@ object LogAnalyticsStreamingQueryListenerSuite {
           Double.NegativeInfinity
         )
       ),
-      new SinkProgress("sink")
+      new SinkProgress("sink"),
+      java.util.Collections.emptyMap()
     )
   )
 }

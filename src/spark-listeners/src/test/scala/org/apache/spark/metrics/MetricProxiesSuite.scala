@@ -3,6 +3,7 @@ package org.apache.spark.metrics
 import java.util.concurrent.TimeUnit
 
 import com.codahale.metrics.{Clock, ExponentiallyDecayingReservoir, UniformReservoir}
+import com.codahale.metrics.jvm.CpuTimeClock
 import org.apache.spark.SparkFunSuite
 import org.apache.spark.rpc.RpcEndpointRef
 import org.mockito.Matchers._
@@ -138,10 +139,10 @@ class MetricProxiesSuite extends SparkFunSuite
       this.rpcMetricsReceiverRef,
       MetricProxiesSuite.MetricNamespace,
       MetricProxiesSuite.HistogramName,
-      new Clock.CpuTimeClock)
+      new CpuTimeClock)
     proxy.mark(value)
     verify(this.rpcMetricsReceiverRef).send(argThat(
-      (message: MeterMessage) => message.value === value && message.clockClass === classOf[Clock.CpuTimeClock]))
+      (message: MeterMessage) => message.value === value && message.clockClass === classOf[CpuTimeClock]))
   }
 
   test("TimerProxy calls sendMetric with a TimerMessage for update(Long, TimeUnit)") {
@@ -161,7 +162,7 @@ class MetricProxiesSuite extends SparkFunSuite
     val clock = mock(classOf[Clock])
     // Make our clock return different values the second time so we can verify
     // The internal Meter inside the Timer calls getTick() in it's constructor, so we need to add an extra return
-    when(clock.getTick()).thenReturn(1000, 1000, 2000)
+    when(clock.getTick()).thenReturn(1000, 1000, 1000, 2000)
     val proxy = new TimerProxy(
       this.rpcMetricsReceiverRef,
       MetricProxiesSuite.MetricNamespace,
@@ -183,7 +184,7 @@ class MetricProxiesSuite extends SparkFunSuite
       MetricProxiesSuite.MetricNamespace,
       MetricProxiesSuite.TimerName,
       new UniformReservoir,
-      new Clock.CpuTimeClock
+      new CpuTimeClock
     )
 
     proxy.update(value, TimeUnit.SECONDS)
@@ -191,7 +192,7 @@ class MetricProxiesSuite extends SparkFunSuite
       (message: TimerMessage) => message.value === value &&
         message.timeUnit === TimeUnit.SECONDS &&
         message.reservoirClass === classOf[UniformReservoir] &&
-        message.clockClass === classOf[Clock.CpuTimeClock]))
+        message.clockClass === classOf[CpuTimeClock]))
   }
 
   test("SettableGaugeProxy calls sendMetric with a SettableGaugeMessage for set(Long)") {

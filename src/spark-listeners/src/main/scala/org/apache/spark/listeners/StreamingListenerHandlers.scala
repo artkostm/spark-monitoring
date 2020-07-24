@@ -155,9 +155,9 @@ class StreamingListenerEventWrapperTypeIdResolver extends com.fasterxml.jackson.
 
   override def idFromBaseType(): String = throw new NotImplementedError()
 
-  override def typeFromId(s: String): JavaType = throw new NotImplementedError()
-
   override def typeFromId(databindContext: DatabindContext, s: String): JavaType = throw new NotImplementedError()
 
   override def getMechanism: JsonTypeInfo.Id = JsonTypeInfo.Id.CUSTOM
+
+  override def getDescForKnownTypeIds: String = s"StreamingListenerEventWrapper of $javaType used as type id"
 }

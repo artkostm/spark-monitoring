@@ -230,7 +230,7 @@ class RpcMetricsReceiverSuite extends SparkFunSuite
       RpcMetricsReceiverSuite.MetricNamespace,
       RpcMetricsReceiverSuite.MeterName,
       value,
-      classOf[Clock.CpuTimeClock]
+      classOf[jvm.CpuTimeClock]
     ))
     verify(meter, timeout(RpcMetricsReceiverSuite.DefaultRpcEventLoopTimeout).times(0)).mark(any[Long])
   }
@@ -291,7 +291,7 @@ class RpcMetricsReceiverSuite extends SparkFunSuite
       value,
       TimeUnit.NANOSECONDS,
       classOf[ExponentiallyDecayingReservoir],
-      classOf[Clock.CpuTimeClock]
+      classOf[jvm.CpuTimeClock]
     ))
     verify(timer, timeout(RpcMetricsReceiverSuite.DefaultRpcEventLoopTimeout).times(0)).update(
       any[Long],
